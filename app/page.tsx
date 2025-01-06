@@ -1,10 +1,9 @@
-// import HeroSwiper from "@/components/HeroSwiper/HeroSwiper";
-
-
+import HeroSwiper from "@/components/MainSwiper";
 
 export default function Home() {
   return (
     <>
+        <HeroSwiper />
     </>
   );
 }

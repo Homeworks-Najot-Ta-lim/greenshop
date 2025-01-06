@@ -6,16 +6,25 @@ import Image from "next/image";
 import Link from "next/link";
 import CustomButton from "./CustomButton";
 import { Modal } from "antd";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import LoginInputs from "./LoginInputs";
 import { instance } from "@/hook/intance";
 import RegisterInputs from "./RegisterInputs";
+import RegisterVerify from "./RegisterVerify";
+import { Context } from "@/context/TokenContext";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
+import { toast } from "react-toastify";
+import { error } from "console";
 
 const Header = () => {
+  const {setToken} = useContext(Context)
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [isLogin, setIsLogin] = useState<"login" | "register" | "register-verify">("login")
-  const [registerEmail, setRegisterEmail] = useState<"string" | null>(null)
-
+  const [isLogin, setIsLogin] = useState<"login" | "register" | "register-verify" | "forgot-password" | "reset-password">("login")
+  const [registerEmail, setRegisterEmail] = useState<string | null>(null)
+  const [registirationCode,setRegistirationCode] = useState<string | null>(null)
+  const [forgotEmail,setForgotEmail] = useState<string | null>(null)
+  const [resetPasswordCode,setResetPasswordCode] = useState<string | null>(null)
   const navList: NavListType[] = [
     {
       title: "Home",
@@ -44,18 +53,51 @@ const Header = () => {
     }
     instance().post("/login",data).then(res=>{
       setOpenModal(false)
-      console.log(res.data)
+      setToken(res.data.access_token)
+      toast.success("Welcome GREENSHOP")
     })
     } else if(isLogin==="register"){
+      const confirmPassword = (e.target as HTMLFormElement).confirmPassword.value
       const data = {
         email: (e.target as HTMLFormElement).email.value,
         firstName: (e.target as HTMLFormElement).username.value,
         lastName: (e.target as HTMLFormElement).username.value,
         password: (e.target as HTMLFormElement).password.value,
       };
+      if(data.password !== confirmPassword){
+        toast.warning("Password and Confirm passwords are not the same")
+        return
+      }
       instance().post("/register",data).then(res=>{
         setIsLogin("register-verify")
         setRegisterEmail(data.email)
+      }).catch((error)=>{
+        toast.warning(error.response.data.message)
+      })
+    } else if (isLogin === "register-verify"){
+      const data = {
+        email: registerEmail,
+        code: registirationCode,
+      };
+      instance().post("/users/verify",{},{params: data}).then(res=>{
+        setIsLogin("login")
+        toast.success("Successful, you can log in.")
+      })
+    } else if(isLogin==="forgot-password"){
+      const email = (e.target as HTMLFormElement).email.value
+      instance().post(`/forgot/${email}`).then(res=>{
+        setForgotEmail(email)
+        setIsLogin("reset-password")
+      })
+    } else if(isLogin =="reset-password"){
+      const data = {
+        email: forgotEmail,
+        new_password: (e.target as HTMLFormElement).newPassword.value,
+        otp: resetPasswordCode,
+      }
+      console.log(data)
+      instance().put("/reset-password",data).then(res=>{
+        setIsLogin("login")
       })
     }
   }
@@ -104,9 +146,13 @@ const Header = () => {
             <form onSubmit={handleSubmit}>
                 {isLogin == "login" && <LoginInputs setIsLogin={setIsLogin}/>}
                 {isLogin == "register" && <RegisterInputs />}
-                <CustomButton type="submit" extraClass="!w-full !py-4 !font-bold !text-[16px]" title={isLogin == "login" ? "Login":"Register"} />
+                {isLogin =="register-verify" && <RegisterVerify setRegistirationCode={setRegistirationCode}/>}
+                {isLogin =="forgot-password" && <ForgotPassword/>}
+                {isLogin == "reset-password" && <ResetPassword setResetPasswordCode={setResetPasswordCode}/>}
+                <CustomButton type="submit" extraClass="!w-full !py-4 !font-bold !text-[16px]" title={isLogin == "login" ? "Login":(isLogin=="register" ? "Register" : (isLogin=="register-verify"?"Verify":"Send"))} />
             </form>
       </Modal>
+
     </>
   );
 };
