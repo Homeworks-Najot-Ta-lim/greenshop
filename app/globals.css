@@ -5,3 +5,37 @@
 .ant-btn-color-primary {
     background-color: #46A358 !important;
 }
+
+.ant-pagination-prev {
+    display: none !important;
+}
+
+.ant-pagination-item {
+    border: 1px solid #E5E5E5 !important;
+    width: 35px !important;
+    height: 35px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.ant-pagination-item-active {
+    border: none !important;
+    background-color: #46A358 !important;
+}
+
+.ant-pagination-item-active > a {
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+}
+
+.ant-pagination-next {
+    border: 1px solid #E5E5E5 !important;
+    width: 35px !important;
+    height: 35px !important;
+}
+
+.ant-slider-handle::after {
+    box-shadow: 0 0 0 2px #46A358 !important;
+}

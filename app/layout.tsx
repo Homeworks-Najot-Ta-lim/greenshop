@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { ContextProvider } from "@/context/TokenContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { QueryProvider } from "@/store/QueryProvider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,8 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ContextProvider>
+        <QueryProvider>
         <Header/>
         {children}
+        </QueryProvider>
         </ContextProvider>
         <ToastContainer position="bottom-right" autoClose={3000} />
       </body>

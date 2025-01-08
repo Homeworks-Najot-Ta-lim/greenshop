@@ -66,4 +66,32 @@ function LoginIcon() {
   );
 }
 
-export { SearchIcon, BasketIcon, LoginIcon };
+function LikeIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10 15.5C10 15.5 13 14 13 11.5C13 10.5 12 10 12 9C12 8 13 7 13 6C13 4.5 12 4 12 3C12 2 11 1 10 1C9 1 8 2 8 3C8 4 7 4.5 7 6C7 7 8 8 8 9C8 10 7 10.5 7 11.5C7 14 10 15.5 10 15.5Z"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 15.5V6.5"
+        stroke="white"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+
+export { SearchIcon, BasketIcon, LoginIcon,LikeIcon };
