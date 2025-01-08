@@ -55,6 +55,8 @@ const Header = () => {
       setOpenModal(false)
       setToken(res.data.access_token)
       toast.success("Welcome GREENSHOP")
+    }).catch((error)=>{
+        toast.error(error.response.data.message)
     })
     } else if(isLogin==="register"){
       const confirmPassword = (e.target as HTMLFormElement).confirmPassword.value
@@ -82,12 +84,16 @@ const Header = () => {
       instance().post("/users/verify",{},{params: data}).then(res=>{
         setIsLogin("login")
         toast.success("Successful, you can log in.")
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
       })
     } else if(isLogin==="forgot-password"){
       const email = (e.target as HTMLFormElement).email.value
       instance().post(`/forgot/${email}`).then(res=>{
         setForgotEmail(email)
         setIsLogin("reset-password")
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
       })
     } else if(isLogin =="reset-password"){
       const data = {
@@ -98,7 +104,10 @@ const Header = () => {
       console.log(data)
       instance().put("/reset-password",data).then(res=>{
         setIsLogin("login")
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
       })
+      
     }
   }
 
