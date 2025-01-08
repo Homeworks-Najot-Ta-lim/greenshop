@@ -6,6 +6,7 @@ import getCategories from "@/services/getCategoriesService";
 import { CategoryType } from "@/types/CategoryType";
 import { ProductType } from "@/types/ProductType";
 import { Button, Pagination, Slider } from "antd";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
   const [limit, setLimit] = useState<number>(6)
   const [minPrice,setMinPrice] = useState<number | null>(null)
   const [maxPrice, setMaxPrice] = useState<number | null>(null)
-  const [price, setPrice] = useState<number[]>([])
+  const [price, setPrice] = useState<number[]>([38,1235])
 
   const [activeItem, setActiveItem] = useState<string>("")
   const categories: CategoryType[] = getCategories()
@@ -49,7 +50,20 @@ console.log(products)
               </ul>
               <div>
                 <Slider min={38} max={1600} onChange={(value)=>setPrice(value)}  range defaultValue={[38,1235]}/>
+                <p className="my-2">Price:<span className="text-green-600 font-bold">${`${price[1]}-${price[0]}`}</span></p>
                 <Button onClick={handleFilterProductsByPrice} htmlType="button" size="large" type="primary">Filter</Button>
+                <div className="w-full container my-2">
+                    <p className="font-bold my-3">Size</p>
+                    <div className="w-full flex items-center flex-col justify-center gap-4 font-[100]">
+                      <li className="flex w-full items-center justify-around"><p>Small</p><p>(119)</p></li>
+                      <li className="flex w-full items-center justify-around"><p>Medium</p><p>(86)</p></li>
+                      <li className="flex w-full items-center justify-around"><p>Large</p><p>(78)</p></li>
+                    </div>
+                </div>
+                <div className="mt-10 w-full flex items-center justify-center flex-col bg-[linear-gradient(180deg,rgba(70,163,88,0.1)_0%,rgba(70,163,88,0.03)_100%)]">
+                    <Image src="/SuperSale.png" alt="super sale image" width={266} height={65}/>
+                    <Image src="/saleImage.png" alt="super sale image" width={370} height={370}/>
+                </div>
               </div>
             </div>
             <div className="w-[70%] p-5">
@@ -59,9 +73,16 @@ console.log(products)
                   <div className="flex justify-end my-5">
                       <Pagination onChange={handlePaginationChange} pageSize={limit} defaultCurrent={page} total={total_count}/>
                   </div>
+
+
+                 
             </div>
         </div>
 
+
+      <div className="flex w-[1250px] mx-auto mt-5">
+qsqdsqsqsq
+      </div>
     </>
   );
 }

@@ -26,7 +26,7 @@ const getProducts = (
         })
         .then(res => res.data),
   });
-  console.log(data)
+
   return data;
 };
 

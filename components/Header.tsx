@@ -5,7 +5,7 @@ import { NavListType } from "@/types/NavListType";
 import Image from "next/image";
 import Link from "next/link";
 import CustomButton from "./CustomButton";
-import { Modal } from "antd";
+import { Badge, Modal } from "antd";
 import { FormEvent, useContext, useState } from "react";
 import LoginInputs from "./LoginInputs";
 import { instance } from "@/hook/intance";
@@ -15,16 +15,19 @@ import { Context } from "@/context/TokenContext";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 
 const Header = () => {
-  const {setToken} = useContext(Context)
+  const {token,setToken} = useContext(Context)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [isLogin, setIsLogin] = useState<"login" | "register" | "register-verify" | "forgot-password" | "reset-password">("login")
   const [registerEmail, setRegisterEmail] = useState<string | null>(null)
   const [registirationCode,setRegistirationCode] = useState<string | null>(null)
   const [forgotEmail,setForgotEmail] = useState<string | null>(null)
   const [resetPasswordCode,setResetPasswordCode] = useState<string | null>(null)
+
+
   const navList: NavListType[] = [
     {
       title: "Home",
@@ -101,7 +104,6 @@ const Header = () => {
         new_password: (e.target as HTMLFormElement).newPassword.value,
         otp: resetPasswordCode,
       }
-      console.log(data)
       instance().put("/reset-password",data).then(res=>{
         setIsLogin("login")
       }).catch((error)=>{
@@ -111,6 +113,14 @@ const Header = () => {
     }
   }
 
+  const {data: CategoryBasketList=[]}=useQuery({
+    queryKey: ['basketCount'],
+    queryFn: ()=>instance().get("/basket",{
+      params: {page: 1, limit: 1000},
+      headers: {Authorization: `Bearer ${token}`}
+    }).then(res=>res.data)
+  })
+  
   return (
     <>
       <header className="pt-[25px]">
@@ -140,7 +150,9 @@ const Header = () => {
               <SearchIcon />
             </button>
             <button>
+              <Badge count={CategoryBasketList?.TotalCount} size="small" color="green">
               <BasketIcon />
+              </Badge>
             </button>
             <CustomButton type="button" onClick={() => setOpenModal(true)} leftIcon={<LoginIcon />} title="Login" />
           </div>

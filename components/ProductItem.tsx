@@ -1,18 +1,19 @@
 import { Context } from '@/context/TokenContext';
 import { instance } from '@/hook/intance';
-import { BasketIcon, LikeIcon } from '@/icons';
+
 
 import { ProductType } from '@/types/ProductType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import React, { useContext } from 'react';
 import { toast } from 'react-toastify';
+import {ShoppingCart,Heart   } from "lucide-react";
 
 
 const ProductItem: React.FC<{ item: ProductType }> = ({ item }) => {
   const { token } = useContext(Context);
   const queryClient = useQueryClient();
-        
+
   const basketMutation = useMutation({
     mutationFn: (data: { productId: string }) =>
       instance().post('/basket', data, {
@@ -26,7 +27,10 @@ const ProductItem: React.FC<{ item: ProductType }> = ({ item }) => {
     },
   });
 
+
+
   const likeMutation = useMutation({
+
     mutationFn: (id: string) =>
       instance().post(`/like/${id}`, {}, {
         headers: {
@@ -56,20 +60,20 @@ const ProductItem: React.FC<{ item: ProductType }> = ({ item }) => {
       </div>
       <div className="flex items-center gap-5 py-2 cursor-pointer">
         <button
-          className={`${item.basket ? 'text-[#46A358]' : ''}`}
+         
           onClick={() =>
             token
               ? basketMutation.mutate({ productId: item.product_id })
               : toast.error("Logindan o'tish shart!")
           }
         >
-          <BasketIcon />
+           <ShoppingCart fill={item.basket ? "green" : "none"} color={item.basket ? "green" : "black"}/>
         </button>
         <button
           onClick={() => likeMutation.mutate(item.product_id)}
-          className={`${item.liked ? 'text-red-500' : ''}`}
         >
-          <LikeIcon />
+          <Heart fill={item.liked ? "red" : "none"} color={item.liked ? "red" : "black"} />
+         
         </button>
       </div>
     </li>
